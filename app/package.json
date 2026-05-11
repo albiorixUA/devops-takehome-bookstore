@@ -1,0 +1,23 @@
+{
+  "name": "nuxt-bookstore-takehome",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev --host 0.0.0.0",
+    "build": "nuxt build",
+    "start": "node .output/server/index.mjs",
+    "worker": "node server/jobs/worker.js",
+    "migrate": "node server/db/migrations/001_init.js",
+    "seed": "node server/db/seed.js",
+    "test": "node --test tests/*.test.js",
+    "lint": "echo \"lint not configured\""
+  },
+  "dependencies": {
+    "ioredis": "^5.4.2",
+    "nuxt": "^3.15.4",
+    "pg": "^8.13.1",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {}
+}

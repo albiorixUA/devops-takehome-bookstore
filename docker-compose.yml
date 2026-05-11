@@ -1,0 +1,44 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file:
+      - .env.example
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    command: npm run dev
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file:
+      - .env.example
+    depends_on:
+      - db
+      - redis
+    command: npm run worker
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: bookstore
+      POSTGRES_USER: bookstore
+      POSTGRES_PASSWORD: bookstore_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - bookstore-db:/var/lib/postgresql/data
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  bookstore-db:

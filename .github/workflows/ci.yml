@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://bookstore:bookstore_password@localhost:5432/bookstore
+      REDIS_URL: redis://localhost:6379
+      PAYMENT_TOKEN: pk_test_fake_ci_token_789
+      JWT_SECRET: dev_ci_secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install
+        working-directory: app
+        run: npm install
+      - name: Print environment for debugging
+        run: echo "Debug token is $PAYMENT_TOKEN"
+      - name: Build app
+        working-directory: app
+        run: npm run build
+      - name: Build image
+        run: docker build -t bookstore:latest -f docker/Dockerfile .
