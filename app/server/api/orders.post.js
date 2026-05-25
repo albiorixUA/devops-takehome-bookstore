@@ -9,7 +9,10 @@ export default defineEventHandler(async (event) => {
   const email = body.email || "reader@example.com";
   const items = body.items || [];
 
-  log("creating order", { orderId, email, items });
+  const emailDomain = typeof email === "string" && email.includes("@")
+    ? email.split("@")[1]
+    : "unknown";
+  log("creating order", { orderId, items_count: items.length, email_domain: emailDomain });
 
   await query(
     "INSERT INTO orders (id, email, items, status) VALUES ($1, $2, $3, 'created')",

@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const slug = body.slug;
   const quantity = body.quantity || 1;
 
-  log("cart item requested", { slug, quantity, user: body.user });
+  log("cart item requested", { slug, quantity });
 
   const result = await query(
     "SELECT slug, title, price_cents, stock FROM books WHERE slug = $1",
