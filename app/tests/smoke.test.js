@@ -9,3 +9,12 @@ test("health endpoint responds", async () => {
   const body = await response.json();
   assert.equal(body.ok, true);
 });
+
+test("ready endpoint responds when deps are up", async () => {
+  const response = await fetch(`${baseUrl}/api/ready`);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.ready, true);
+  assert.equal(body.db, "ok");
+  assert.equal(body.redis, "ok");
+});
