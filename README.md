@@ -50,3 +50,7 @@ Open:
 ## Submission
 
 Submit a pull request, patch/diff, or repository link.
+
+## Candidate Notes
+
+This branch contains a focused DevOps hardening pass. See [NOTES.md](./NOTES.md) for the audit, the 5-hour delta, what was deferred, and the 30/60/90 roadmap.
