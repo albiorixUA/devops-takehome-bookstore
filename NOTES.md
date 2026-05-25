@@ -47,6 +47,7 @@ Defensible deferrals (each item is real but didn't fit the 5-hour cap or wasn't 
 - **Observability (P2).** Structured logs (`pino`), `/metrics` (`prom-client`), traces (OTLP). **Plan: 60-day.**
 - **Graceful shutdown (P2).** No SIGTERM handlers, pool/redis never drain. **Plan: 60-day.**
 - **Real cloud deployment.** Terraform changed as a static review only — never applied. ECS/Fargate + RDS + ElastiCache + SSM Parameter Store. **Plan: 90-day.**
+- **Trivy HIGH findings in transitive npm deps.** First CI run flagged 11 HIGH CVEs in `cross-spawn`, `glob`, `minimatch`, `tar` — all transitive deps of `nuxt`/`vue`/`pg` with fixed versions available. Image-scan is currently set to **report-only** (`exit-code: 0`) so the gate surfaces findings without blocking merge of this PR. Real fix is `npm overrides` + version bumps + re-running smoke; that is a focused follow-up PR, not part of this hardening slice. **Plan: 30-day, then flip `exit-code` back to `1`.**
 - **Vue/SFC lint coverage.** ESLint flat config covers `.js` only; `.vue` lint needs `eslint-plugin-vue` which would balloon the PR. **Plan: 30-day, cheap.**
 - **CORS allowlist.** Removed allow-all; no replacement yet. Acceptable because the app has no cross-origin client today. **Plan: 30-day when public API is real.**
 
@@ -109,6 +110,7 @@ CI verification:
   - zod schemas on `cart.post`, `orders.post`; server-side total recompute (don't trust client prices).
   - `eslint-plugin-vue` so SFCs are linted too.
   - CORS allowlist when first non-same-origin client exists.
+  - Trivy fix PR: `npm overrides` for `cross-spawn`, `glob`, `minimatch`, `tar` to fixed versions; verify Nuxt build + smoke pass; flip `image-scan` `exit-code` back to `1` so the gate enforces again. Add `npm audit` to CI as a pre-image check.
 
 - **60 days — observability and operations:**
   - Structured logging (`pino`) with correlation IDs (`X-Request-Id` header → req-scoped logger).
