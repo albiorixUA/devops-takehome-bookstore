@@ -6,3 +6,9 @@ node_modules/
 *.log
 coverage/
 dist/
+
+# Terraform local state and tfvars
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.*
+infra/terraform/terraform.tfvars

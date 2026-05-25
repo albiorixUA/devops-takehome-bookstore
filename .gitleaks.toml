@@ -1,0 +1,40 @@
+# Gitleaks configuration for devops-takehome-bookstore.
+#
+# This is a take-home assignment repo. The original `init` commit (7f6e4f6) ships
+# placeholder/fake secrets in .env.example and .github/workflows/ci.yml as part of
+# the deliberately weak setup we are auditing. Our remediation removes those values
+# from HEAD (see commit `chore(secrets): remove committed secrets and stop logging them`)
+# but we do NOT rewrite the upstream history.
+#
+# The allowlist below scopes ONLY the known fake placeholder values that ship in
+# the original commit. Any new secret pattern, or any value introduced in a later
+# commit, is still flagged.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowlist for known fake values shipped in the original init commit"
+
+regexes = [
+  # Original .env.example fakes
+  '''dev_super_secret_change_me''',
+  '''pk_test_fake_bookstore_token_123''',
+  '''fake_internal_token_do_not_use''',
+  '''pk_test_fake_public_token_456''',
+
+  # Original .github/workflows/ci.yml fakes
+  '''pk_test_fake_ci_token_789''',
+  '''dev_ci_secret''',
+
+  # Original docker-compose.yml DB password (kept matching for local dev convenience;
+  # rotated for any non-local deployment)
+  '''bookstore_password''',
+]
+
+# Paths where we accept these placeholder strings showing up (in HEAD they are
+# either removed or only present as commit messages referencing them).
+paths = [
+  '''NOTES\.md''',
+  '''\.gitleaks\.toml''',
+]
